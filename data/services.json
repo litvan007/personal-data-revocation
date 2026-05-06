@@ -1,0 +1,235 @@
+{
+  "services": [
+    {
+      "slug": "yandex",
+      "name": "Яндекс",
+      "color": "#FC3F1D",
+      "legal": {
+        "companyName": "ООО «Яндекс»",
+        "inn": "7736207543",
+        "address": "119021, г. Москва, ул. Льва Толстого, д. 16",
+        "dpoEmail": "privacy@yandex.ru",
+        "dpoName": null
+      },
+      "revocationType": "both",
+      "accountIdentifier": "логин Яндекс ID",
+      "statementNotes": "Для сервисов Еда/Лавка/Доставка — достаточно отзыва через общий аккаунт Яндекс ID.",
+      "steps": [
+        {
+          "title": "Открой passport.yandex.ru",
+          "description": "Войди под своим логином"
+        },
+        {
+          "title": "Перейди в «Удаление аккаунта»",
+          "description": "Прокрути вниз до раздела управления данными"
+        },
+        {
+          "title": "Подтверди удаление",
+          "description": "Введи пароль для подтверждения. Аккаунт будет удалён полностью"
+        }
+      ],
+      "responseTimeDays": 30
+    },
+    {
+      "slug": "ozon",
+      "name": "Ozon",
+      "color": "#005BFF",
+      "legal": {
+        "companyName": "ООО «Маркетплейс» (Ozon)",
+        "inn": "7721709129",
+        "address": "123112, г. Москва, Пресненская наб., д. 10, блок С",
+        "dpoEmail": "dpo@ozon.ru",
+        "dpoName": null
+      },
+      "revocationType": "both",
+      "accountIdentifier": "номер телефона или email аккаунта",
+      "statementNotes": "Ozon обязан хранить историю заказов 5 лет (бухгалтерия). После удаления аккаунта маркетинговые рассылки прекращаются.",
+      "steps": [
+        {
+          "title": "Открой настройки профиля",
+          "description": "Войди на ozon.ru, нажми на аватар → «Настройки»"
+        },
+        {
+          "title": "Перейди в «Безопасность»",
+          "description": "Внизу страницы настроек найди раздел безопасности"
+        },
+        {
+          "title": "Нажми «Удалить аккаунт»",
+          "description": "Подтверди удаление через код из SMS или email"
+        }
+      ],
+      "responseTimeDays": 30
+    },
+    {
+      "slug": "wildberries",
+      "name": "Wildberries",
+      "color": "#CB11AB",
+      "legal": {
+        "companyName": "ООО «Вайлдберриз»",
+        "inn": "7721546864",
+        "address": "143026, г. Москва, поселение Мосрентген, ул. Inventor, д. 5, стр. 1",
+        "dpoEmail": "privacy@wildberries.ru",
+        "dpoName": null
+      },
+      "revocationType": "both",
+      "accountIdentifier": "номер телефона",
+      "statementNotes": null,
+      "steps": [
+        {
+          "title": "Открой профиль в приложении",
+          "description": "Войди в личный кабинет Wildberries"
+        },
+        {
+          "title": "Перейди в «Настройки»",
+          "description": "Найди раздел управления аккаунтом"
+        },
+        {
+          "title": "Нажми «Удалить аккаунт»",
+          "description": "Подтверди удаление. Данные будут удалены в течение 30 дней"
+        }
+      ],
+      "responseTimeDays": 30
+    },
+    {
+      "slug": "sber",
+      "name": "Сбер",
+      "color": "#21A038",
+      "legal": {
+        "companyName": "ПАО «Сбербанк»",
+        "inn": "7707083893",
+        "address": "117997, г. Москва, ул. Вавилова, д. 19",
+        "dpoEmail": "personal.data@sberbank.ru",
+        "dpoName": null
+      },
+      "revocationType": "both",
+      "accountIdentifier": "номер телефона / номер карты",
+      "statementNotes": "Банк обязан хранить данные по ФЗ-115 (противодействие отмыванию) — до 5 лет после закрытия счёта. Маркетинговые данные можно отключить отдельно от банковских.",
+      "steps": [
+        {
+          "title": "Открой СберБанк Онлайн",
+          "description": "Войди в приложение"
+        },
+        {
+          "title": "Перейди в «Профиль» → «Настройки»",
+          "description": "Найди раздел «Отказ от рассылок»"
+        },
+        {
+          "title": "Отключи маркетинговые рассылки",
+          "description": "Сними галочки с push, email и SMS-рассылок"
+        },
+        {
+          "title": "Для полного удаления данных",
+          "description": "Необходимо закрыть все счета и подать заявление в отделении банка"
+        }
+      ],
+      "responseTimeDays": 30
+    },
+    {
+      "slug": "kuper",
+      "name": "Купер",
+      "color": "#FF6B00",
+      "legal": {
+        "companyName": "ООО «СберМаркет» (Купер)",
+        "inn": "9702103630",
+        "address": "121205, г. Москва, территория Сколково Инновационного Центра",
+        "dpoEmail": "support@kuper.ru",
+        "dpoName": null
+      },
+      "revocationType": "interface",
+      "accountIdentifier": "номер телефона",
+      "statementNotes": null,
+      "steps": [
+        {
+          "title": "Открой приложение Купер",
+          "description": "Войди в свой аккаунт"
+        },
+        {
+          "title": "Перейди в «Профиль»",
+          "description": "Найди настройки аккаунта"
+        },
+        {
+          "title": "Нажми «Удалить аккаунт»",
+          "description": "Подтверди удаление через SMS-код"
+        }
+      ],
+      "responseTimeDays": 30
+    },
+    {
+      "slug": "samokat",
+      "name": "Самокат",
+      "color": "#FFC800",
+      "legal": {
+        "companyName": "ООО «Самокат»",
+        "inn": "9721056003",
+        "address": "125167, г. Москва, Ленинградский пр-т, д. 37, стр. 9",
+        "dpoEmail": "support@samokat.ru",
+        "dpoName": null
+      },
+      "revocationType": "interface",
+      "accountIdentifier": "номер телефона",
+      "statementNotes": null,
+      "steps": [
+        {
+          "title": "Открой приложение Самокат",
+          "description": "Войди в свой аккаунт"
+        },
+        {
+          "title": "Перейди в «Профиль» → «Настройки»",
+          "description": "Прокрути в самый низ"
+        },
+        {
+          "title": "Нажми «Удалить аккаунт»",
+          "description": "Подтверди удаление"
+        }
+      ],
+      "responseTimeDays": 30
+    },
+    {
+      "slug": "chibis",
+      "name": "Чибис",
+      "color": "#E84D85",
+      "legal": {
+        "companyName": "ООО «Ту-Ду» (Чибис)",
+        "inn": "5408136859",
+        "address": "630099, г. Новосибирск, ул. М. Горького, д. 14",
+        "dpoEmail": "support@chibbis.ru",
+        "dpoName": null
+      },
+      "revocationType": "interface",
+      "accountIdentifier": "номер телефона",
+      "statementNotes": null,
+      "steps": [
+        {
+          "title": "Открой приложение Чибис",
+          "description": "Войди в свой аккаунт"
+        },
+        {
+          "title": "Перейди в «Профиль»",
+          "description": "Найди настройки аккаунта"
+        },
+        {
+          "title": "Нажми «Удалить аккаунт»",
+          "description": "Подтверди удаление"
+        }
+      ],
+      "responseTimeDays": 30
+    },
+    {
+      "slug": "aliexpress",
+      "name": "AliExpress Россия",
+      "color": "#FF4747",
+      "legal": {
+        "companyName": "ООО «Алибаба.КОМ (РУ)»",
+        "inn": "7710834680",
+        "address": "121205, г. Москва, территория Сколково",
+        "dpoEmail": "privacy_oss@alibaba-inc.com",
+        "dpoName": null
+      },
+      "revocationType": "letter",
+      "accountIdentifier": "логин / email аккаунта",
+      "statementNotes": "AliExpress РФ — только через официальное письмо на юр. адрес или email DPO.",
+      "steps": [],
+      "responseTimeDays": 30
+    }
+  ]
+}

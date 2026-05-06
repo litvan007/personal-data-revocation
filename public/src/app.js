@@ -3,9 +3,35 @@ let servicesData = null;
 
 async function loadServices() {
   if (servicesData) return servicesData;
-  const res = await fetch('/data/services.json');
+  const res = await fetch('data/services.json');
   servicesData = (await res.json()).services;
   return servicesData;
+}
+
+// Lazy-load external libs
+let html2pdfLoaded = false;
+let docxLoaded = false;
+
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+async function ensureHtml2Pdf() {
+  if (html2pdfLoaded || window.html2pdf) { html2pdfLoaded = true; return; }
+  await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js');
+  html2pdfLoaded = true;
+}
+
+async function ensureDocx() {
+  if (docxLoaded || window.docx) { docxLoaded = true; return; }
+  await loadScript('https://unpkg.com/docx@8.5.0/build/index.umd.js');
+  docxLoaded = true;
 }
 
 // Router
@@ -48,7 +74,6 @@ async function renderHomePage(app) {
     </div>
   `;
 
-  // Bind clicks
   app.querySelectorAll('.service-card').forEach(card => {
     card.addEventListener('click', () => {
       window.location.hash = `/service/${card.dataset.slug}`;
@@ -102,12 +127,10 @@ async function renderServicePage(app, slug) {
     </div>
   `;
 
-  // Back button
   app.querySelector('#backBtn').addEventListener('click', () => {
     window.location.hash = '/';
   });
 
-  // Tabs
   let activeTab = 'statement';
   const tabs = app.querySelectorAll('.tab');
 
@@ -123,7 +146,6 @@ async function renderServicePage(app, slug) {
 
 function renderTab(tabName, service, savedData) {
   const content = document.getElementById('tabContent');
-
   if (tabName === 'guide') {
     renderGuide(content, service);
   } else {
@@ -192,7 +214,6 @@ function renderStatementTab(el, service, savedData) {
   const form = el.querySelector('#pdrevForm');
   let saveTimer;
 
-  // Auto-save
   form.addEventListener('input', () => {
     clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
@@ -201,7 +222,6 @@ function renderStatementTab(el, service, savedData) {
     }, 500);
   });
 
-  // Submit → preview
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const data = getFormData(form);
@@ -275,8 +295,33 @@ function renderPreview(el, service, data) {
     </div>
   `;
 
-  el.querySelector('#btnPdf').addEventListener('click', () => generatePDF());
-  el.querySelector('#btnDocx').addEventListener('click', () => generateDOCX(service, data));
+  el.querySelector('#btnPdf').addEventListener('click', async () => {
+    const btn = el.querySelector('#btnPdf');
+    btn.textContent = 'Загрузка...';
+    btn.disabled = true;
+    try {
+      await ensureHtml2Pdf();
+      generatePDF();
+    } catch(e) {
+      alert('Ошибка загрузки библиотеки PDF. Проверьте интернет.');
+    }
+    btn.textContent = '📥 Скачать PDF';
+    btn.disabled = false;
+  });
+
+  el.querySelector('#btnDocx').addEventListener('click', async () => {
+    const btn = el.querySelector('#btnDocx');
+    btn.textContent = 'Загрузка...';
+    btn.disabled = true;
+    try {
+      await ensureDocx();
+      generateDOCX(service, data);
+    } catch(e) {
+      alert('Ошибка загрузки библиотеки DOCX. Проверьте интернет.');
+    }
+    btn.textContent = '📥 Скачать DOCX';
+    btn.disabled = false;
+  });
 }
 
 // ===== PDF =====
@@ -303,33 +348,33 @@ function generateDOCX(service, data) {
         page: { margin: { top: 1134, right: 1134, bottom: 1134, left: 1134 } }
       },
       children: [
-        new Paragraph({ children: [new TextRun({ text: `Кому: ${service.legal.companyName}`, size: 28 })] }),
-        new Paragraph({ children: [new TextRun({ text: `Юридический адрес: ${service.legal.address}`, size: 28 })] }),
-        service.legal.dpoName ? new Paragraph({ children: [new TextRun({ text: `DPO: ${service.legal.dpoName}`, size: 28 })] }) : new Paragraph({}),
-        new Paragraph({ children: [new TextRun({ text: `Email: ${service.legal.dpoEmail}`, size: 28 })] }),
-        new Paragraph({}),
-        new Paragraph({ children: [new TextRun({ text: `От: ${data.fullName}`, size: 28 })] }),
-        new Paragraph({ children: [new TextRun({ text: `Адрес: ${data.address}`, size: 28 })] }),
-        data.passport ? new Paragraph({ children: [new TextRun({ text: `Паспорт: ${data.passport}`, size: 28 })] }) : new Paragraph({}),
-        new Paragraph({ children: [new TextRun({ text: `Телефон: ${data.phone}`, size: 28 })] }),
-        new Paragraph({ children: [new TextRun({ text: `Email: ${data.email}`, size: 28 })] }),
-        new Paragraph({}),
+        p(`Кому: ${service.legal.companyName}`),
+        p(`Юридический адрес: ${service.legal.address}`),
+        service.legal.dpoName ? p(`DPO: ${service.legal.dpoName}`) : p(''),
+        p(`Email: ${service.legal.dpoEmail}`),
+        p(''),
+        p(`От: ${data.fullName}`),
+        p(`Адрес: ${data.address}`),
+        data.passport ? p(`Паспорт: ${data.passport}`) : p(''),
+        p(`Телефон: ${data.phone}`),
+        p(`Email: ${data.email}`),
+        p(''),
         new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'ЗАЯВЛЕНИЕ', bold: true, size: 32 })] }),
         new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'об отзыве согласия на обработку персональных данных', size: 28 })] }),
-        new Paragraph({}),
-        new Paragraph({ children: [new TextRun({ text: `Настоящим заявлением отзываю свое согласие на обработку моих персональных данных, ранее данное при регистрации и использовании сервиса «${service.name}».`, size: 28 })], spacing: { after: 200 } }),
-        new Paragraph({ children: [new TextRun({ text: 'Прошу:', size: 28 })] }),
-        new Paragraph({ children: [new TextRun({ text: '1. Прекратить обработку моих персональных данных', size: 28 })] }),
-        new Paragraph({ children: [new TextRun({ text: '2. Уничтожить мои персональные данные в сроки, установленные законодательством (до 30 дней)', size: 28 })] }),
-        new Paragraph({ children: [new TextRun({ text: '3. Подтвердить факт прекращения обработки и уничтожения ПДн письменно', size: 28 })] }),
-        new Paragraph({}),
-        new Paragraph({ children: [new TextRun({ text: 'Мои данные в вашей системе:', size: 28 })] }),
-        new Paragraph({ children: [new TextRun({ text: `— Аккаунт: ${data.accountLogin}`, size: 28 })] }),
-        new Paragraph({ children: [new TextRun({ text: `— Email: ${data.email}`, size: 28 })] }),
-        new Paragraph({ children: [new TextRun({ text: `— Телефон: ${data.phone}`, size: 28 })] }),
-        new Paragraph({}),
-        new Paragraph({ children: [new TextRun({ text: 'Приложение: копия паспорта (основная страница)', size: 28 })] }),
-        new Paragraph({}),
+        p(''),
+        p(`Настоящим заявлением отзываю свое согласие на обработку моих персональных данных, ранее данное при регистрации и использовании сервиса «${service.name}».`),
+        p('Прошу:'),
+        p('1. Прекратить обработку моих персональных данных'),
+        p('2. Уничтожить мои персональные данные в сроки, установленные законодательством (до 30 дней)'),
+        p('3. Подтвердить факт прекращения обработки и уничтожения ПДн письменно'),
+        p(''),
+        p('Мои данные в вашей системе:'),
+        p(`— Аккаунт: ${data.accountLogin}`),
+        p(`— Email: ${data.email}`),
+        p(`— Телефон: ${data.phone}`),
+        p(''),
+        p('Приложение: копия паспорта (основная страница)'),
+        p(''),
         new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: `Дата: ${today}`, size: 28 })] }),
         new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun({ text: 'Подпись: ___________', size: 28 })] }),
       ]
@@ -344,6 +389,10 @@ function generateDOCX(service, data) {
     a.click();
     URL.revokeObjectURL(url);
   });
+}
+
+function p(text) {
+  return new Paragraph({ children: [new TextRun({ text, size: 28 })] });
 }
 
 // ===== LOCALSTORAGE =====
